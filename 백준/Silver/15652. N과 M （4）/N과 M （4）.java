@@ -3,21 +3,23 @@ import java.util.*;
 
 public class Main {
     static int N, M;
-    static StringBuilder sb = new StringBuilder();
-    static boolean[] selected;
 
-    static void dfs(int curNum, String str) {
-        if (str.length() == M) {
-            for (int idx = 0; idx < str.length(); idx++) {
-                sb.append(str.charAt(idx)).append(" ");
+    static int[] tmpArr;
+    static StringBuilder answer = new StringBuilder();
+
+    static void dfs(int curNum, int depth) {
+        if (depth == M) {
+            for (int num : tmpArr) {
+                answer.append(num).append(" ");
             }
-            sb.append("\n");
+            answer.append("\n");
 
             return;
         }
 
         for (int num = curNum; num <= N; num++) {
-            dfs(num, str + num);
+            tmpArr[depth] = num;
+            dfs(num, depth + 1);
         }
     }
 
@@ -28,8 +30,9 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        dfs(1, "");
+        tmpArr = new int[M];
+        dfs(1, 0);
 
-        System.out.println(sb);
+        System.out.println(answer);
     }
 }
