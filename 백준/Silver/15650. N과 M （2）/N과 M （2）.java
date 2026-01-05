@@ -3,23 +3,33 @@ import java.util.*;
 
 public class Main {
     static int N, M;
-    static StringBuilder sb = new StringBuilder();
-    static boolean[] selected;
 
-    static void dfs(int curNum, String str) {
-        if (str.length() == M) {
-            for (int idx = 0; idx < str.length(); idx++) {
-                sb.append(str.charAt(idx)).append(" ");
+    static int[] tmpArr;
+    static boolean[] selected;
+    static StringBuilder answer = new StringBuilder();
+
+    static void dfs(int curNum, int depth) {
+        if (depth == M) {
+            for (int num : tmpArr) {
+                answer.append(num).append(" ");
             }
-            sb.append("\n");
+            answer.append("\n");
 
             return;
         }
 
-        for (int num = curNum + 1; num <= N; num++) {
-            dfs(num, str + num);
+        for (int num = curNum; num <= N; num++) {
+            if (selected[num]) {
+                continue;
+            }
+
+            selected[num] = true;
+            tmpArr[depth] = num;
+            dfs(num, depth + 1);
+            selected[num] = false;
         }
     }
+
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,8 +38,10 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        dfs(0, "");
+        tmpArr = new int[M];
+        selected = new boolean[N + 1];
+        dfs(1, 0);
 
-        System.out.println(sb);
+        System.out.println(answer);
     }
 }
