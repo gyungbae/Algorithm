@@ -23,6 +23,10 @@ public class Main {
             if (curNode == to) {
                 return;
             }
+            
+            if(curDist != dist[curNode]) {
+                continue;
+            }
 
             for (int[] info : adjList[curNode]) {
                 int nextNode = info[0];
