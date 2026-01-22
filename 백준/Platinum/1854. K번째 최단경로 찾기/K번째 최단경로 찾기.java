@@ -17,6 +17,10 @@ public class Main {
             int curNode = (int) current[0];
             long curDist = current[1];
 
+            if (curDist > dist[curNode][k]) {
+                continue;
+            }
+
             for (int[] info : adjList[curNode]) {
                 int nextNode = info[0];
                 int weight = info[1];
