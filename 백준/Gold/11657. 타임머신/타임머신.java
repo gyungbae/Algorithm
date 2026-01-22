@@ -5,26 +5,27 @@ public class Main {
     static int N, M;
     static List<int[]>[] adjList;
 
-    static long[] dist;
+    static long[] distance;
+    static boolean hasNegCycle;
 
-    static boolean search() {
-        dist[1] = 0;
+    static void search() {
+        distance[1] = 0;
 
-        for (int length = 1; length <= N - 1; length++) {
+        for (int visitCnt = 1; visitCnt <= N - 1; visitCnt++) {
             boolean updated = false;
 
             for (int curNode = 1; curNode <= N; curNode++) {
-                if (dist[curNode] == Integer.MAX_VALUE) {
+                if (distance[curNode] == Long.MAX_VALUE) {
                     continue;
                 }
 
                 for (int[] info : adjList[curNode]) {
                     int nextNode = info[0];
-                    int nextWeight = info[1];
+                    int weight = info[1];
 
-                    long nextDist = dist[curNode] + nextWeight;
-                    if (nextDist < dist[nextNode]) {
-                        dist[nextNode] = nextDist;
+                    long nextDist = distance[curNode] + weight;
+                    if (nextDist < distance[nextNode]) {
+                        distance[nextNode] = nextDist;
                         updated = true;
                     }
                 }
@@ -36,22 +37,21 @@ public class Main {
         }
 
         for (int curNode = 1; curNode <= N; curNode++) {
-            if (dist[curNode] == Integer.MAX_VALUE) {
+            if (distance[curNode] == Long.MAX_VALUE) {
                 continue;
             }
 
             for (int[] info : adjList[curNode]) {
                 int nextNode = info[0];
-                int nextWeight = info[1];
+                int weight = info[1];
 
-                long nextDist = dist[curNode] + nextWeight;
-                if (nextDist < dist[nextNode]) {
-                    return true;
+                long nextDist = distance[curNode] + weight;
+                if (nextDist < distance[nextNode]) {
+                    hasNegCycle = true;
+                    return;
                 }
             }
         }
-
-        return false;
     }
 
     public static void main(String[] args) throws IOException {
@@ -75,26 +75,25 @@ public class Main {
             adjList[from].add(new int[]{to, weight});
         }
 
-        dist = new long[N + 1];
-        Arrays.fill(dist, Integer.MAX_VALUE);
-
-        boolean hasCycle = search();
-
-        if (hasCycle) {
+        distance = new long[N + 1];
+        Arrays.fill(distance, Long.MAX_VALUE);
+        hasNegCycle = false;
+        search();
+        if (hasNegCycle) {
             System.out.println(-1);
             return;
         }
 
         StringBuilder sb = new StringBuilder();
         for (int node = 2; node <= N; node++) {
-            if (dist[node] == Integer.MAX_VALUE) {
+            long val = distance[node];
+            if (val == Long.MAX_VALUE) {
                 sb.append(-1).append("\n");
                 continue;
             }
 
-            sb.append(dist[node]).append("\n");
+            sb.append(val).append("\n");
         }
-
         System.out.println(sb);
     }
 }
