@@ -2,15 +2,13 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N;
-    static int M;
-    static int[] arr;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int N = Integer.parseInt(br.readLine());
         int[] arr = new int[N];
+
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int idx = 0; idx < N; idx++) {
             arr[idx] = Integer.parseInt(st.nextToken());
@@ -18,25 +16,30 @@ public class Main {
         Arrays.sort(arr);
 
         int answer = 0;
-        loop : for (int stdIdx = 0; stdIdx < N; stdIdx++) {
+        for (int stdIdx = 0; stdIdx < N; stdIdx++) {
             int target = arr[stdIdx];
-            for (int fromIdx = 0; fromIdx < N - 1; fromIdx++) {
-                if (fromIdx == stdIdx) {
+            int leftIdx = 0, rightIdx = N - 1;
+
+            while (leftIdx < rightIdx) {
+                if (leftIdx == stdIdx) {
+                    leftIdx++;
                     continue;
                 }
 
-                for (int toIdx = fromIdx + 1; toIdx < N; toIdx++) {
-                    if (toIdx == stdIdx) {
-                        continue;
-                    }
+                if (rightIdx == stdIdx) {
+                    rightIdx--;
+                    continue;
+                }
 
-                    long sum = arr[fromIdx] + arr[toIdx];
-                    if (sum == target) {
-                        answer++;
-                        continue loop;
-                    } else if (sum > target) {
-                        break;
-                    }
+                long sum = (long) arr[leftIdx] + arr[rightIdx];
+
+                if (sum == target) {
+                    answer++;
+                    break; 
+                } else if (sum < target) {
+                    leftIdx++;
+                } else {
+                    rightIdx--;
                 }
             }
         }
