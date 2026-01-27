@@ -17,43 +17,43 @@ public class Main {
 
         int pour = 0;
         if (currentA != 0) {
-            pour = calculate('A', 'B', currentA, currentB);
+            pour = calculate('B', currentA, currentB);
             if (!visited[currentA - pour][currentB + pour]) {
                 DFS(currentA - pour, currentB + pour, currentC);
             }
 
-            pour = calculate('A', 'C', currentA, currentC);
+            pour = calculate('C', currentA, currentC);
             if (!visited[currentA - pour][currentB]) {
                 DFS(currentA - pour, currentB, currentC + pour);
             }
         }
 
         if (currentB != 0) {
-            pour = calculate('B', 'A', currentB, currentA);
+            pour = calculate('A', currentB, currentA);
             if (!visited[currentA + pour][currentB - pour]) {
                 DFS(currentA + pour, currentB - pour, currentC);
             }
 
-            pour = calculate('B', 'C', currentB, currentC);
+            pour = calculate('C', currentB, currentC);
             if (!visited[currentA][currentB - pour]) {
                 DFS(currentA, currentB - pour, currentC + pour);
             }
         }
 
         if (currentC != 0) {
-            pour = calculate('C', 'A', currentC, currentA);
+            pour = calculate('A', currentC, currentA);
             if (!visited[currentA + pour][currentB]) {
                 DFS(currentA + pour, currentB, currentC - pour);
             }
 
-            pour = calculate('C', 'B', currentC, currentB);
+            pour = calculate('B', currentC, currentB);
             if (!visited[currentA][currentB + pour]) {
                 DFS(currentA, currentB + pour, currentC - pour);
             }
         }
     }
 
-    static int calculate(char from, char to, int fromLiter, int toLiter) {
+    static int calculate(char to, int fromLiter, int toLiter) {
         int limit = 0;
         switch (to) {
             case 'A' -> limit = A;
@@ -68,7 +68,7 @@ public class Main {
             pour = limit - toLiter;
         }
 
-        return  pour;
+        return pour;
     }
 
     public static void main(String[] args) throws Exception {
