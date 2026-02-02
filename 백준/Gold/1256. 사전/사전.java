@@ -2,8 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N, M; 
-    static long K;
+    static int N, M, K;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -11,9 +10,9 @@ public class Main {
         String[] input = br.readLine().split(" ");
         N = Integer.parseInt(input[0]);
         M = Integer.parseInt(input[1]);
-        K = Long.parseLong(input[2]);
+        K = Integer.parseInt(input[2]);
 
-        long[][] dp = new long[N + 1][M + 1];
+        int[][] dp = new int[N + 1][M + 1];
         for (int aCount = 0; aCount <= N; aCount++) {
             for (int zCount = 0; zCount <= M; zCount++) {
                 if (aCount == 0 || zCount == 0) {
@@ -32,7 +31,7 @@ public class Main {
 
         StringBuilder sb = new StringBuilder();
         while (N > 0 && M > 0) {
-            long length = dp[N - 1][M];
+            int length = dp[N - 1][M];
 
             if (K <= length) {
                 sb.append("a");
