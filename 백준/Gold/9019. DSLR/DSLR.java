@@ -7,29 +7,13 @@ public class Main {
 
     static StringBuilder sb = new StringBuilder();
 
-    static int D(int num) {
-        return (num * 2) % 10000;
-    }
-
-    static int S(int num) {
-        return num == 0 ? 9999 : num - 1;
-    }
-
-    static int L(int num) {
-        return (num % 1000) * 10 + (num / 1000);
-    }
-
-    static int R(int num) {
-        return (num % 10) * 1000 + (num / 10);
-    }
+    static boolean[] visited;
+    static int[] previousNumArr;
+    static char[] commandRecordArr;
+    static char[] commandArr = {'D', 'S', 'L', 'R'};
 
     static void BFS() {
         Queue<Integer> queue = new ArrayDeque<>();
-
-        boolean[] visited = new boolean[10000];
-        int[] previousArr = new int[10000];
-        char[] commandArr = new char[10000];
-        Arrays.fill(previousArr, -1);
 
         queue.add(A);
         visited[A] = true;
@@ -41,48 +25,38 @@ public class Main {
                 break;
             }
 
-            int next = D(current);
-            if (!visited[next]) {
-                visited[next] = true;
-                previousArr[next] = current;
-                commandArr[next] = 'D';
-                queue.add(next);
-            }
-
-            next = S(current);
-            if (!visited[next]) {
-                visited[next] = true;
-                previousArr[next] = current;
-                commandArr[next] = 'S';
-                queue.add(next);
-            }
-
-            next = L(current);
-            if (!visited[next]) {
-                visited[next] = true;
-                previousArr[next] = current;
-                commandArr[next] = 'L';
-                queue.add(next);
-            }
-
-            next = R(current);
-            if (!visited[next]) {
-                visited[next] = true;
-                previousArr[next] = current;
-                commandArr[next] = 'R';
-                queue.add(next);
+            for (char command : commandArr) {
+                int next = DSLR(current, command);
+                if (!visited[next]) {
+                    visited[next] = true;
+                    previousNumArr[next] = current;
+                    commandRecordArr[next] = command;
+                    queue.offer(next);
+                }
             }
         }
-
-        int current = B;
-        StringBuilder answer = new StringBuilder();
-        while (current != A) {
-            answer.append(commandArr[current]);
-            current = previousArr[current];
-        }
-
-        sb.append(answer.reverse()).append("\n");
     }
+
+    static int DSLR(int num, char command) {
+        switch (command) {
+            case 'D' -> {   return (num * 2) % 10000;   }
+            case 'S' -> {   return num == 0 ? 9999 : num - 1;   }
+            case 'L' -> {   return (num % 1000) * 10 + (num / 1000);    }
+            default -> {   return (num % 10) * 1000 + (num / 10);  }    //R
+        }
+    }
+
+    static void traceBack() {
+        int current = B;
+        StringBuilder result = new StringBuilder();
+        while (current != A) {
+            result.append(commandRecordArr[current]); 
+            current = previousNumArr[current];       
+        }
+
+        sb.append(result.reverse()).append("\n");
+    }
+
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -93,7 +67,13 @@ public class Main {
             A = Integer.parseInt(st.nextToken());
             B = Integer.parseInt(st.nextToken());
 
+            visited = new boolean[10000];
+            commandRecordArr = new char[10000];
+            previousNumArr = new int[10000];
+            Arrays.fill(previousNumArr, -1);
+
             BFS();
+            traceBack();
         }
 
         System.out.println(sb);
