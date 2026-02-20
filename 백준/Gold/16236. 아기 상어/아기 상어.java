@@ -58,11 +58,7 @@ public class Main {
                     continue;
 
                 visited[nextRow][nextCol] = true;
-                if (1 <= input[nextRow][nextCol] && input[nextRow][nextCol] <= 6) {
-                    queue.offer(new int[]{nextRow, nextCol, current[2] + 1});
-                } else {
-                    queue.offer(new int[]{nextRow, nextCol, current[2] + 1});
-                }
+                queue.offer(new int[]{nextRow, nextCol, current[2] + 1});
             }
         }
 
