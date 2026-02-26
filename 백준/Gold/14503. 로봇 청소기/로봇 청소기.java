@@ -3,13 +3,14 @@ import java.util.*;
 
 public class Main {
     static int N, M;
-    static int[][] inputArr;
+    static int[][] inputArr;          // 0: 빈칸, 1: 벽
 
+    static boolean[][] cleaned;
     static Cleaner cleaner;
     static int answer;
-    static boolean[][] cleaned;
-    static int[] deltaRow = {-1, 1, 0, 0};
-    static int[] deltaCol = {0, 0, -1, 1};
+
+    static final int[] DELTA_ROW = {-1, 0, 1, 0};
+    static final int[] DELTA_COL = {0, 1, 0, -1};
 
     static void clean() {
         if (!cleaned[cleaner.row][cleaner.col]) {
@@ -18,57 +19,7 @@ public class Main {
         }
     }
 
-    static boolean canProceed() {
-        for (int delta = 0; delta < 4; delta++) {
-            int nextRow = cleaner.row + deltaRow[delta];
-            int nextCol = cleaner.col + deltaCol[delta];
-
-            if(nextRow < 0 || nextRow >= N || nextCol < 0 || nextCol >= M)
-                continue;
-
-            if(cleaned[nextRow][nextCol] || inputArr[nextRow][nextCol] == 1)
-                continue;
-
-            return true;
-        }
-
-        return false;
-    }
-
-    static void rotate() {
-        if (cleaner.direction == 0) {
-            cleaner.direction = 3;
-        } else {
-            cleaner.direction--;
-        }
-    }
-
-    static void moveBackward() {
-        int nextRow = cleaner.row;
-        int nextCol = cleaner.col;
-        switch (cleaner.direction) {
-            case 0 -> { //북
-                nextRow = cleaner.row + 1;
-            }
-
-            case 1 -> { //동
-                nextCol = cleaner.col - 1;
-            }
-
-            case 2 -> { //남
-                nextRow = cleaner.row - 1;
-            }
-
-            default -> {    //서
-                nextCol = cleaner.col + 1;
-            }
-        }
-
-        if(canBackward(nextRow, nextCol))
-            move(nextRow, nextCol);
-    }
-
-    static boolean canBackward(int row, int col) {
+    static boolean canProceed(int row, int col) {
         if(row < 0 || row >= N || col < 0 || col >= M)
             return false;
 
@@ -78,45 +29,8 @@ public class Main {
         return true;
     }
 
-    static void moveForward() {
-        int nextRow = cleaner.row;
-        int nextCol = cleaner.col;
-        switch (cleaner.direction) {
-            case 0 -> { //북
-                nextRow = cleaner.row - 1;
-            }
-            case 1 -> { //동
-                nextCol = cleaner.col + 1;
-            }
-            case 2 -> { //남
-                nextRow = cleaner.row + 1;
-            }
-            default -> {    //서
-                nextCol = cleaner.col - 1;
-            }
-        }
-
-        if (canForward(nextRow, nextCol)) {
-            move(nextRow, nextCol);
-        } else {
-            rotate();
-            moveForward();
-        }
-    }
-
-    static boolean canForward(int row, int col){
-        if(row < 0 || row >= N || col < 0 || col >= M)
-            return false;
-
-        if(cleaned[row][col] || inputArr[row][col] == 1)
-            return false;
-
-        return true;
-    }
-
-    static void move(int row, int col) {
-        cleaner.row = row;
-        cleaner.col = col;
+    static void rotate() {
+        cleaner.direction = (cleaner.direction + 3) % 4;
     }
 
     public static void main(String[] args) throws Exception {
@@ -141,21 +55,35 @@ public class Main {
         }
 
         cleaned = new boolean[N][M];
+
         while (true) {
             clean();
 
-            if(!canProceed()) {
-                int previousRow = cleaner.row;
-                int previousCol = cleaner.col;
-
-                moveBackward();
-
-                if(cleaner.row == previousRow && cleaner.col == previousCol)
-                    break;
-            } else {
+            boolean moved = false;
+            for (int rotateCount = 0; rotateCount < 4; rotateCount++) {
                 rotate();
-                moveForward();
+                int nextRow = cleaner.row + DELTA_ROW[cleaner.direction];
+                int nextCol = cleaner.col + DELTA_COL[cleaner.direction];
+
+                if (canProceed(nextRow, nextCol) && !cleaned[nextRow][nextCol]) {
+                    cleaner.row = nextRow;
+                    cleaner.col = nextCol;
+                    moved = true;
+                    break;
+                }
             }
+
+            if (moved)
+                continue;
+
+            int nextRow = cleaner.row + DELTA_ROW[cleaner.direction] * -1;
+            int nextCol = cleaner.col + DELTA_COL[cleaner.direction] * -1;
+
+            if (!canProceed(nextRow, nextCol))
+                break;
+
+            cleaner.row = nextRow;
+            cleaner.col = nextCol;
         }
 
         System.out.println(answer);
