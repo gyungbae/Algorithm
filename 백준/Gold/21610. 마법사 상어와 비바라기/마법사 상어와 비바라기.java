@@ -15,8 +15,8 @@ public class Main {
     static int N, M;
     static int[][] map;
 
-    static boolean[][] isCloud;
-    static boolean[][] wasCloud;
+    static boolean[][] currentCloud;
+    static boolean[][] previousCloud;
     static int[] moveDeltaRow = {0, -1, -1, -1, 0, 1, 1, 1};
     static int[] moveDeltaCol = {-1, -1, 0, 1, 1, 1, 0, -1};
     static int[] magicDeltaRow = {-1, -1, 1, 1};
@@ -26,7 +26,7 @@ public class Main {
         boolean[][] nextCloud = new boolean[N][N];
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if(!isCloud[row][col])
+                if(!currentCloud[row][col])
                     continue;
 
                 int nextRow = (row + moveDeltaRow[direction] * (step % N) + N) % N;
@@ -36,13 +36,13 @@ public class Main {
             }
         }
 
-        isCloud = nextCloud;
+        currentCloud = nextCloud;
     }
 
     static void rain() {
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if(isCloud[row][col])
+                if(currentCloud[row][col])
                     map[row][col]++;
             }
         }
@@ -51,7 +51,7 @@ public class Main {
     static void magic() {
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if(!isCloud[row][col])
+                if(!currentCloud[row][col])
                     continue;
 
                 int count = 0;
@@ -74,14 +74,14 @@ public class Main {
     }
 
     static void removeCloud() {
-        wasCloud = new boolean[N][N];
+        previousCloud = new boolean[N][N];
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if (!isCloud[row][col])
+                if (!currentCloud[row][col])
                     continue;
-
-                isCloud[row][col] = false;
-                wasCloud[row][col] = true;
+                
+                currentCloud[row][col] = false;
+                previousCloud[row][col] = true;
             }
         }
     }
@@ -89,11 +89,11 @@ public class Main {
     static void makeCloud() {
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                if(map[row][col] < 2 || wasCloud[row][col])
+                if(map[row][col] < 2 || previousCloud[row][col])
                     continue;
 
                 map[row][col] -= 2;
-                isCloud[row][col] = true;
+                currentCloud[row][col] = true;
             }
         }
     }
@@ -123,12 +123,12 @@ public class Main {
             }
         }
 
-        isCloud = new boolean[N][N];
-        wasCloud = new boolean[N][N];
-        isCloud[N - 1][0] = true;
-        isCloud[N - 1][1] = true;
-        isCloud[N - 2][0] = true;
-        isCloud[N - 2][1] = true;
+        currentCloud = new boolean[N][N];
+        previousCloud = new boolean[N][N];
+        currentCloud[N - 1][0] = true;
+        currentCloud[N - 1][1] = true;
+        currentCloud[N - 2][0] = true;
+        currentCloud[N - 2][1] = true;
 
         for (int move = 1; move <= M; move++) {
             st = new StringTokenizer(br.readLine());
