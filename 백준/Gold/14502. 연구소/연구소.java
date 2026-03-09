@@ -8,7 +8,6 @@ public class Main {
     static List<int[]> virusList = new ArrayList<>();
     static int[] deltaRow = {-1, 1, 0, 0};
     static int[] deltaCol = {0, 0, -1, 1};
-    static boolean[][] visited;
     static int answer;
 
     static void buildWall(int depth) {
@@ -19,7 +18,9 @@ public class Main {
             }
 
             spread(tmpMap);
-            answer = Math.max(answer, count(tmpMap));
+
+            answer = Math.max(answer, getSafeArea(tmpMap));
+
             return;
         }
 
@@ -35,49 +36,41 @@ public class Main {
     }
 
     static void spread(int[][] map) {
-        Queue<int[]> q = new ArrayDeque<>();
+        Queue<int[]> queue = new ArrayDeque<>();
 
-        for (int[] virus : virusList) {
-            q.offer(virus);
+        for (int[] info : virusList) {
+            queue.offer(info);
         }
 
-        while (!q.isEmpty()) {
-            int[] current = q.poll();
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
 
             for (int delta = 0; delta < 4; delta++) {
                 int nextRow = current[0] + deltaRow[delta];
                 int nextCol = current[1] + deltaCol[delta];
-                if (canProceed(map, nextRow, nextCol)) {
-                    map[nextRow][nextCol] = 2;
-                    q.offer(new int[]{nextRow, nextCol});
-                }
+
+                if(nextRow < 0 || nextRow >= N || nextCol < 0 || nextCol >= M)
+                    continue;
+
+                if(map[nextRow][nextCol] != 0)
+                    continue;
+
+                map[nextRow][nextCol] = 2;
+                queue.offer(new int[]{nextRow, nextCol});
             }
         }
     }
 
-    static int count(int[][] map) {
-        int cnt = 0;
+    static int getSafeArea(int[][] map) {
+        int count = 0;
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < M; col++) {
-                if (map[row][col] == 0) {
-                    cnt++;
-                }
+                if(map[row][col] == 0)
+                    count++;
             }
         }
 
-        return cnt;
-    }
-
-    static boolean canProceed(int[][] map, int row, int col) {
-        if (row < 0 || row >= N || col < 0 || col >= M) {
-            return false;
-        }
-
-        if (map[row][col] != 0) {
-            return false;
-        }
-
-        return true;
+        return count;
     }
 
     public static void main(String[] args) throws Exception {
@@ -92,14 +85,14 @@ public class Main {
             for (int col = 0; col < M; col++) {
                 int num = Integer.parseInt(st.nextToken());
                 map[row][col] = num;
-                if (num == 2) {
+
+                if(num == 2)
                     virusList.add(new int[]{row, col});
-                }
             }
         }
 
         buildWall(0);
-        
+
         System.out.println(answer);
     }
 }
