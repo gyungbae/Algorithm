@@ -9,10 +9,10 @@ public class Main {
     static int[] deltaCol = {0, 1, 1, 1, 0, -1, -1, -1};
 
     static void move() {
-        List<Fireball>[][] nextMap = new LinkedList[N][N];
+        List<Fireball>[][] nextMap = new ArrayList[N][N];
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                nextMap[row][col] = new LinkedList<>();
+                nextMap[row][col] = new ArrayList<>();
             }
         }
 
@@ -62,7 +62,7 @@ public class Main {
                 if(newMass == 0) {
                     continue;
                 }
-                
+
                 for (int direction = newDirection; direction < 8; direction += 2) {
                     list.add(new Fireball(newMass, newSpeed, direction));
                 }
@@ -91,10 +91,10 @@ public class Main {
         M = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
 
-        map = new LinkedList[N][N];
+        map = new ArrayList[N][N];
         for (int row = 0; row < N; row++) {
             for (int col = 0; col < N; col++) {
-                map[row][col] = new LinkedList<>();
+                map[row][col] = new ArrayList<>();
             }
         }
 
