@@ -5,7 +5,7 @@ public class Main {
     static int N, M, x, y, K;
     static int[][] map;
 
-    static int[] dice = {0, 0, 0, 0, 0, 0, 0};
+    static int[] dice = new int[7];
     static int topIdx = 1;
     static int upIdx = 2;
     static int rightIdx = 3;
@@ -20,38 +20,14 @@ public class Main {
         int nextRow = x + deltaRow[delta];
         int nextCol = y + deltaCol[delta];
 
-        if(nextRow < 0 || nextRow >= N || nextCol < 0 || nextCol >= M)
+        if (nextRow < 0 || nextRow >= N || nextCol < 0 || nextCol >= M)
             return;
 
         switch (delta) {
-            case 1 -> {
-                int tmp = topIdx;
-                topIdx = leftIdx;
-                leftIdx = bottomIdx;
-                bottomIdx = rightIdx;
-                rightIdx = tmp;
-            }
-            case 2 -> {
-                int tmp = topIdx;
-                topIdx = rightIdx;
-                rightIdx = bottomIdx;
-                bottomIdx = leftIdx;
-                leftIdx = tmp;
-            }
-            case 3 -> {
-                int tmp = topIdx;
-                topIdx = downIdx;
-                downIdx = bottomIdx;
-                bottomIdx = upIdx;
-                upIdx = tmp;
-            }
-            case 4 -> {
-                int tmp = topIdx;
-                topIdx = upIdx;
-                upIdx = bottomIdx;
-                bottomIdx = downIdx;
-                downIdx = tmp;
-            }
+            case 1 -> rollEast();
+            case 2 -> rollWest();
+            case 3 -> rollNorth();
+            case 4 -> rollSouth();
         }
 
         x = nextRow;
@@ -65,6 +41,38 @@ public class Main {
         }
 
         sb.append(dice[topIdx]).append("\n");
+    }
+
+    static void rollEast() {
+        int tmp = topIdx;
+        topIdx = leftIdx;
+        leftIdx = bottomIdx;
+        bottomIdx = rightIdx;
+        rightIdx = tmp;
+    }
+
+    static void rollWest() {
+        int tmp = topIdx;
+        topIdx = rightIdx;
+        rightIdx = bottomIdx;
+        bottomIdx = leftIdx;
+        leftIdx = tmp;
+    }
+
+    static void rollNorth() {
+        int tmp = topIdx;
+        topIdx = downIdx;
+        downIdx = bottomIdx;
+        bottomIdx = upIdx;
+        upIdx = tmp;
+    }
+
+    static void rollSouth() {
+        int tmp = topIdx;
+        topIdx = upIdx;
+        upIdx = bottomIdx;
+        bottomIdx = downIdx;
+        downIdx = tmp;
     }
 
     public static void main(String[] args) throws Exception {
