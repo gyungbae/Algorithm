@@ -7,82 +7,35 @@ public class Main {
     static int y = 1;
     static int[][] map;
 
-    static int[] dice = {0, 1, 2, 3, 4, 5, 6};
-    static int topIdx = 1;
-    static int upIdx = 2;
-    static int rightIdx = 3;
-    static int downIdx = 5;
-    static int leftIdx = 4;
-    static int bottomIdx = 6;
-    static int direction = 0;
+    static Dice dice = new Dice();
     static int[] deltaRow = {0, 1, 0, -1};
     static int[] deltaCol = {1, 0, -1, 0};
 
     static void move() {
-        int nextRow = x + deltaRow[direction];
-        int nextCol = y + deltaCol[direction];
+        int nextRow = x + deltaRow[dice.direction];
+        int nextCol = y + deltaCol[dice.direction];
 
         if (nextRow < 1 || nextRow > N || nextCol < 1 || nextCol > M) {
-            direction = (direction + 2) % 4;
-            nextRow = x + deltaRow[direction];
-            nextCol = y + deltaCol[direction];
+            dice.direction = (dice.direction + 2) % 4;
+            nextRow = x + deltaRow[dice.direction];
+            nextCol = y + deltaCol[dice.direction];
         }
 
-        switch (direction) {
-            case 0 -> rollEast();
-            case 1 -> rollSouth();
-            case 2 -> rollWest();
-            case 3 -> rollNorth();
+        switch (dice.direction) {
+            case 0 -> dice.rollEast();
+            case 1 -> dice.rollSouth();
+            case 2 -> dice.rollWest();
+            case 3 -> dice.rollNorth();
         }
 
         x = nextRow;
         y = nextCol;
 
-        if (dice[bottomIdx] > map[x][y]) {
-            turnRight();
-        } else if(dice[bottomIdx] < map[x][y]){
-            turnLeft();
+        if (dice.values[dice.bottomIdx] > map[x][y]) {
+            dice.turnRight();
+        } else if(dice.values[dice.bottomIdx] < map[x][y]){
+            dice.turnLeft();
         }
-    }
-
-    static void rollEast() {
-        int tmp = topIdx;
-        topIdx = leftIdx;
-        leftIdx = bottomIdx;
-        bottomIdx = rightIdx;
-        rightIdx = tmp;
-    }
-
-    static void rollWest() {
-        int tmp = topIdx;
-        topIdx = rightIdx;
-        rightIdx = bottomIdx;
-        bottomIdx = leftIdx;
-        leftIdx = tmp;
-    }
-
-    static void rollNorth() {
-        int tmp = topIdx;
-        topIdx = downIdx;
-        downIdx = bottomIdx;
-        bottomIdx = upIdx;
-        upIdx = tmp;
-    }
-
-    static void rollSouth() {
-        int tmp = topIdx;
-        topIdx = upIdx;
-        upIdx = bottomIdx;
-        bottomIdx = downIdx;
-        downIdx = tmp;
-    }
-
-    static void turnRight() {
-        direction = (direction + 1) % 4;
-    }
-
-    static void turnLeft() {
-        direction = (direction + 3) % 4;
     }
 
     static int getScore() {
@@ -140,5 +93,57 @@ public class Main {
         }
 
         System.out.println(sum);
+    }
+}
+
+class Dice {
+    int direction = 0;
+    
+    int[] values = {0, 1, 2, 3, 4, 5, 6};
+    int topIdx = 1;
+    int upIdx = 2;
+    int rightIdx = 3;
+    int leftIdx = 4;
+    int downIdx = 5;
+    int bottomIdx = 6;
+
+    void rollEast() {
+        int tmp = topIdx;
+        topIdx = leftIdx;
+        leftIdx = bottomIdx;
+        bottomIdx = rightIdx;
+        rightIdx = tmp;
+    }
+
+    void rollWest() {
+        int tmp = topIdx;
+        topIdx = rightIdx;
+        rightIdx = bottomIdx;
+        bottomIdx = leftIdx;
+        leftIdx = tmp;
+    }
+
+    void rollNorth() {
+        int tmp = topIdx;
+        topIdx = downIdx;
+        downIdx = bottomIdx;
+        bottomIdx = upIdx;
+        upIdx = tmp;
+    }
+
+    void rollSouth() {
+        int tmp = topIdx;
+        topIdx = upIdx;
+        upIdx = bottomIdx;
+        bottomIdx = downIdx;
+        downIdx = tmp;
+    }
+
+    void turnRight() {
+        direction = (direction + 1) % 4;
+    }
+
+    void turnLeft() {
+        direction = (direction + 3) % 4;
     }
 }
