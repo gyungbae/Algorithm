@@ -1,13 +1,24 @@
 import java.io.*;
 import java.util.*;
 
+/**
+ * 아기 상어 사이즈 2 시작, 상하좌우 이동
+ * 큰 물고기 이동 X, 같은 사이즈 이동 O, 작은 사이즈 이동 O/식사 O
+ * 가장 가까운 -> 가장 위 -> 가장 왼쪽 물고기부터 식사
+ * 이동에 1초
+ * 크기와 같은 수의 물고기를 먹으면 크기 증가
+ *
+ * 최단거리 >> BFS
+ * Shark, Fish class 생성
+ * searchFish(), eat() 반복
+ */
 public class Main {
     static int N;
     static int[][] input;
 
-    static Shark shark;
     static int[] deltaRow = {-1, 1, 0, 0};
     static int[] deltaCol = {0, 0, -1, 1};
+    static Shark shark;
     static int answer;
 
     static Fish searchFish() {
@@ -22,34 +33,34 @@ public class Main {
         int minDistance = Integer.MAX_VALUE;
         while (!queue.isEmpty()) {
             int[] current = queue.poll();
-            int row = current[0];
-            int col = current[1];
+            int currentRow = current[0];
+            int currentCol = current[1];
             int distance = current[2];
 
-            if (distance > minDistance)
+            if(distance > minDistance)
                 break;
 
-            int fishSize = input[row][col];
-            if(1 <= fishSize && fishSize <= 6 && fishSize < shark.size) {
-                if (distance == minDistance) {
-                    if (fishRow == row) {
-                        fishCol = Math.min(fishCol, col);
-                    }
+            //먹을 수 있는 물고기
+            int currentValue = input[currentRow][currentCol];
+            if (1 <= currentValue && currentValue <= 6 && currentValue < shark.size) {
+                if (distance == minDistance) {  //가장 위, 가장 왼쪽 판별
+                    if (fishRow == currentRow)
+                        fishCol = Math.min(fishCol, currentCol);
 
-                    if (row < fishRow) {
-                        fishRow = row;
-                        fishCol = col;
+                    if (currentRow < fishRow) {
+                        fishRow = currentRow;
+                        fishCol = currentCol;
                     }
-                } else {
-                    fishRow = row;
-                    fishCol = col;
+                } else {    //최단거리, 물고기 갱신
+                    fishRow = currentRow;
+                    fishCol = currentCol;
                     minDistance = distance;
                 }
             }
 
             for (int delta = 0; delta < 4; delta++) {
-                int nextRow = row + deltaRow[delta];
-                int nextCol = col + deltaCol[delta];
+                int nextRow = currentRow + deltaRow[delta];
+                int nextCol = currentCol + deltaCol[delta];
 
                 if (nextRow < 0 || nextRow >= N || nextCol < 0 || nextCol >= N)
                     continue;
@@ -58,13 +69,12 @@ public class Main {
                     continue;
 
                 visited[nextRow][nextCol] = true;
-                queue.offer(new int[]{nextRow, nextCol, current[2] + 1});
+                queue.offer(new int[]{nextRow, nextCol, distance + 1});
             }
         }
 
-        if (fishRow == N || fishCol == N) {
+        if(fishRow == N)
             return null;
-        }
 
         return new Fish(fishRow, fishCol, input[fishRow][fishCol], minDistance);
     }
@@ -82,7 +92,7 @@ public class Main {
         answer += fish.distance;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         N = Integer.parseInt(br.readLine());
@@ -90,9 +100,8 @@ public class Main {
         for (int row = 0; row < N; row++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             for (int col = 0; col < N; col++) {
-                int num = Integer.parseInt(st.nextToken());
-                input[row][col] = num;
-                if (num == 9) {
+                input[row][col] = Integer.parseInt(st.nextToken());
+                if (input[row][col] == 9) {
                     shark = new Shark(row, col);
                     input[row][col] = 0;
                 }
@@ -101,6 +110,7 @@ public class Main {
 
         while (true) {
             Fish fish = searchFish();
+
             if (fish == null)
                 break;
 
