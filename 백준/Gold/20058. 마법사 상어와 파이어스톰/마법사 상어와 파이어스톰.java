@@ -29,7 +29,7 @@ public class Main {
             int[][] tmp = new int[size][size];
             for (int tmpRow = 0; tmpRow < size; tmpRow++) {
                 for (int tmpCol = 0; tmpCol < size; tmpCol++) {
-                    tmp[tmpCol][size - 1 - tmpRow] = map[row + tmpRow][col + tmpCol];
+                    tmp[tmpRow][tmpCol] = map[row + (size - 1 - tmpCol)][col + tmpRow];
                 }
             }
 
