@@ -83,9 +83,12 @@ public class Main {
 
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
+                if(map[row][col] == 0)
+                    continue;
+                
                 sum += map[row][col];
 
-                if (!visited[row][col] && map[row][col] > 0)
+                if (!visited[row][col])
                     max = Math.max(max, getArea(row, col));
             }
         }
