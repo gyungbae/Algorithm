@@ -2,40 +2,39 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] info, int n, int m) {
-        int answer = Integer.MAX_VALUE;
+        int answer = n;
         
         int size = info.length;
         int[][] dp = new int[size][m];
         for(int idx = 0; idx < size; idx++) {
-            Arrays.fill(dp[idx], Integer.MAX_VALUE);
+            Arrays.fill(dp[idx], n);
         }
         
-        dp[0][0] = info[0][0];
-        if(info[0][1] < m) {
+        if(info[0][0] < n) 
+            dp[0][0] = info[0][0];
+        
+        if(info[0][1] < m) 
             dp[0][info[0][1]] = 0;
-        }
         
         for(int idx = 1; idx < size; idx++) {
-            int printA = info[idx][0];
-            int printB = info[idx][1];
+            int valueA = info[idx][0];
+            int valueB = info[idx][1];
             
-            for(int prevB = 0; prevB < m; prevB++) {
-                if(dp[idx - 1][prevB] == Integer.MAX_VALUE) {
-                    continue;
-                }
+            for(int printB = 0; printB < m; printB++) {
+                dp[idx][printB] = Math.min(dp[idx][printB], dp[idx - 1][printB] + valueA);
                 
-                dp[idx][prevB] = Math.min(dp[idx][prevB], dp[idx - 1][prevB] + printA);
-                int nextB = prevB + printB;
-                if(nextB < m) {
-                    dp[idx][nextB] = Math.min(dp[idx][nextB], dp[idx - 1][prevB]);
-                }
+                int nextPrintB = printB + valueB;
+                if(nextPrintB >= m)
+                    continue;
+                
+                dp[idx][nextPrintB] = Math.min(dp[idx][nextPrintB], dp[idx - 1][printB]);
             }
         }
         
         for(int printB = 0; printB < m; printB++) {
             answer = Math.min(answer, dp[size - 1][printB]);
         }
-        
-        return answer < n ? answer : -1;
+         
+        return answer == n ? -1 : answer;
     }
 }
