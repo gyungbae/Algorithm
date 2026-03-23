@@ -15,14 +15,16 @@ public class Main {
         if (depth == 3 || depth >= answer)
             return;
 
-        for (int idx = startIdx; idx < H * N; idx++) {
-            int row = idx / N;
-            int col = idx % N;
+        for (int idx = startIdx; idx < H * (N - 1); idx++) {
+            int row = idx / (N - 1);
+            int col = idx % (N - 1);
 
             if (map[row][col] == 1)
                 continue;
+            
             if (col - 1 >= 0 && map[row][col - 1] == 1)
                 continue;
+            
             if (col + 1 < N - 1 && map[row][col + 1] == 1)
                 continue;
 
