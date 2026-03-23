@@ -13,22 +13,13 @@ class Solution {
             
             int player = players[time];
             
-            int pool = m - 1 + m * queue.size();
-            
-            if(player < pool)
+            if(player < m)
                 continue;
             
-            int require = player - pool;
-            int add = 0;
-            if(require % m == 0) {
-                add = require / m;
-            } else {
-                add = require / m + 1;
-            }
-            
-            answer += add;
-            for(int i = 0; i < add; i++) {
+            int require = player / m;
+            while(queue.size() < require) {
                 queue.offer(time + k - 1);
+                answer++;
             }
         }
         
