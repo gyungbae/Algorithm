@@ -12,10 +12,10 @@ public class Main {
     static int answer;
 
     static int move(Piece piece, int color, int nextRow, int nextCol) {
-        switch (color) {
-            case 0 : return moveWhite(piece, nextRow, nextCol).size();
-            default : return moveRed(piece, nextRow, nextCol).size();
-        }
+        return switch (color) {
+            case 0 -> moveWhite(piece, nextRow, nextCol).size();
+            default -> moveRed(piece, nextRow, nextCol).size();
+        };
     }
 
     static List<Piece> moveWhite(Piece piece, int nextRow, int nextCol) {
