@@ -128,7 +128,7 @@ public class Main {
             pieceList.add(piece);
         }
 
-        while (answer <= 1000) {
+        loop : while (true) {
             answer++;
             for (Piece piece : pieceList) {
                 int nextRow = piece.row + deltaRow[piece.direction];
@@ -145,14 +145,12 @@ public class Main {
                 }
 
                 int result = move(piece, colorMap[nextRow][nextCol], nextRow, nextCol);
-                if (result >= 4) {
-                    System.out.println(answer);
-                    return;
-                }
+                if (result >= 4 || answer > 1000)
+                    break loop;
             }
         }
 
-        System.out.println(-1);
+        System.out.println(answer > 1000 ? -1 : answer);
     }
 }
 
