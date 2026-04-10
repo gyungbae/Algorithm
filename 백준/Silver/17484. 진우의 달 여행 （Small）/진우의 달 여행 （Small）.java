@@ -2,50 +2,64 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N, M;
-    static int[][] map;
-    static int answer = Integer.MAX_VALUE;
-
-    static int[] deltaCol = {-1, 0, 1};
-
-    static void dfs(int row, int col, int direction, int sum) {
-        if (row == N - 1) {
-            answer = Math.min(answer, sum);
-            return;
-        }
-
-        for (int delta = 0; delta < 3; delta++) {
-            if (delta == direction) 
-                continue; 
-
-            int nextRow = row + 1;
-            int nextCol = col + deltaCol[delta];
-
-            if (nextCol < 0 || nextCol >= M) 
-                continue;
-
-            dfs(nextRow, nextCol, delta, sum + map[nextRow][nextCol]);
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
+    
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-
-        map = new int[N][M];
-
-        for (int i = 0; i < N; i++) {
+        int[][] map = new int[N][M];
+        for (int row = 0; row < N; row++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < M; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
+            for (int col = 0; col < M; col++) {
+                map[row][col] = Integer.parseInt(st.nextToken());
             }
         }
 
-        for (int i = 0; i < M; i++) {
-            dfs(0, i, -1, map[0][i]);
+        int[][][] dp = new int[N][M][3];
+        for (int row = 0; row < N; row++) {
+            for (int col = 0; col < M; col++) {
+                if (row == 0) {
+                    Arrays.fill(dp[row][col], map[row][col]);
+                } else {
+                    Arrays.fill(dp[row][col], Integer.MAX_VALUE);
+                }
+            }
+        }
+
+        for (int row = 1; row < N; row++) {
+            int prev = row - 1;
+
+            for (int col = 0; col < M; col++) {
+                int left = col - 1;
+                int right = col + 1;
+
+                if(right < M) {
+                    dp[row][col][0] = Math.min(dp[prev][right][1], dp[prev][right][2]);
+                }
+
+                dp[row][col][1] = Math.min(dp[prev][col][0], dp[prev][col][2]);
+
+                if (left >= 0) {
+                    dp[row][col][2] = Math.min(dp[prev][left][0], dp[prev][left][1]);
+                }
+
+                for (int direction = 0; direction <= 2; direction++) {
+                    if(dp[row][col][direction] == Integer.MAX_VALUE)
+                        continue;
+
+                    dp[row][col][direction] += map[row][col];
+                }
+            }
+        }
+
+        int answer = Integer.MAX_VALUE;
+        for (int col = 0; col < M; col++) {
+            for (int direction = 0; direction <= 2; direction++) {
+                answer = Math.min(answer, dp[N - 1][col][direction]);
+            }
         }
 
         System.out.println(answer);
