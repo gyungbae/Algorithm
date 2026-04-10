@@ -2,43 +2,51 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
 
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
 
-        Map<String, Integer> map = new HashMap<>();
-
-        for (int input = 0; input < N; input++) {
-            String word = br.readLine();
-
-            if (word.length() < M) 
-                continue;
-
-            map.put(word, map.getOrDefault(word, 0) + 1);
+        Map<String, Integer> countMap = new HashMap<>();
+        for (int i = 1; i <= N; i++) {
+            String input = br.readLine();
+            countMap.put(input, countMap.getOrDefault(input, 0) + 1);
         }
 
-        List<String> words = new ArrayList<>(map.keySet());
+        List<String> memorizeList = new ArrayList<>();
+        for (String word : countMap.keySet()) {
+            if(word.length() < M)
+                continue;
 
-        words.sort((o1, o2) -> {
-            if (!map.get(o1).equals(map.get(o2))) {
-                return map.get(o2) - map.get(o1);
+            memorizeList.add(word);
+        }
+
+        Collections.sort(memorizeList, (o1, o2) -> {
+            int count1 = countMap.get(o1);
+            int count2 = countMap.get(o2);
+
+            if (count1 == count2) {
+                int length1 = o1.length();
+                int length2 = o2.length();
+
+                if (length1 == length2) {
+                    return o1.compareTo(o2);
+                }
+
+                return length2 - length1;
             }
 
-            if (o1.length() != o2.length()) {
-                return o2.length() - o1.length();
-            }
-
-            return o1.compareTo(o2);
+            return count2 - count1;
         });
 
         StringBuilder sb = new StringBuilder();
-        for (String word : words) {
-            sb.append(word).append('\n');
+        for (String word : memorizeList) {
+            sb.append(word).append("\n");
         }
 
-        System.out.print(sb);
+        System.out.println(sb);
     }
 }
