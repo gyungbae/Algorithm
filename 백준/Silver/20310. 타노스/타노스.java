@@ -1,44 +1,52 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String s = br.readLine();
+
+        String input = br.readLine();
+        int length = input.length();
 
         int zeroCount = 0;
         int oneCount = 0;
-
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '0') 
+        for (int i = 0; i < length; i++) {
+            if (input.charAt(i) == '0') {
                 zeroCount++;
-            
-            else oneCount++;
+                continue;
+            }
+
+            oneCount++;
         }
 
-        int removeZero = zeroCount / 2;
-        int removeOne = oneCount / 2;
+        int zeroTarget = zeroCount / 2;
+        int oneTarget = oneCount / 2;
+        boolean[] removed = new boolean[length];
+        for (int i = 0; i < length; i++) {
+            if(oneTarget == 0)
+                break;
 
-        boolean[] removed = new boolean[s.length()];
-
-        for (int i = 0; i < s.length() && removeOne > 0; i++) {
-            if (s.charAt(i) == '1') {
+            if (input.charAt(i) == '1' && !removed[i]) {
                 removed[i] = true;
-                removeOne--;
+                oneTarget--;
             }
         }
 
-        for (int i = s.length() - 1; i >= 0 && removeZero > 0; i--) {
-            if (s.charAt(i) == '0') {
+        for (int i = length - 1; i >= 0; i--) {
+            if(zeroTarget == 0)
+                break;
+
+            if (input.charAt(i) == '0' && !removed[i]) {
                 removed[i] = true;
-                removeZero--;
+                zeroTarget--;
             }
         }
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            if (!removed[i]) {
-                sb.append(s.charAt(i));
-            }
+        for (int i = 0; i < length; i++) {
+            if(!removed[i])
+                sb.append(input.charAt(i));
         }
 
         System.out.println(sb);
