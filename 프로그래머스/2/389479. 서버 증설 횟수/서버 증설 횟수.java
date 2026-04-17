@@ -6,19 +6,18 @@ class Solution {
         
         Queue<Integer> queue = new ArrayDeque<>();
         
-        for(int time = 0; time < 24; time++) {
-            while(!queue.isEmpty() && queue.peek() < time) {
+        for(int idx = 0; idx < 24; idx++) {
+            while(!queue.isEmpty() && queue.peek() <= idx) {
                 queue.poll();
             }
             
-            int player = players[time];
+            int player = players[idx];
             
             if(player < m)
                 continue;
             
-            int require = player / m;
-            while(queue.size() < require) {
-                queue.offer(time + k - 1);
+            while(queue.size() < player / m) {
+                queue.offer(idx + k);
                 answer++;
             }
         }
