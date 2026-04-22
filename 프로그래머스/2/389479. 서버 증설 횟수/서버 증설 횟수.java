@@ -16,6 +16,7 @@ class Solution {
             if(player < m)
                 continue;
             
+            
             while(queue.size() < player / m) {
                 queue.offer(idx + k);
                 answer++;
