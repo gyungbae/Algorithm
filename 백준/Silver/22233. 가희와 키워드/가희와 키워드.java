@@ -11,13 +11,13 @@ public class Main {
 
         Set<String> keywords = new HashSet<>();
 
-        for (int i = 0; i < N; i++) {
+        for (int input = 0; input < N; input++) {
             keywords.add(br.readLine());
         }
 
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < M; i++) {
+        for (int idx = 0; idx < M; idx++) {
             String[] words = br.readLine().split(",");
 
             for (String word : words) {
