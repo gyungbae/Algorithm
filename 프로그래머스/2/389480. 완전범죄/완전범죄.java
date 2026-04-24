@@ -6,38 +6,36 @@ class Solution {
         
         int size = info.length;
         int[][] dp = new int[size][m];
-        for(int row = 0; row < size; row++) {
-            Arrays.fill(dp[row], n);
+        for(int idx = 0; idx < size; idx++) {
+            Arrays.fill(dp[idx], Integer.MAX_VALUE);
         }
         
-        if(info[0][0] < n)
-            dp[0][0] = info[0][0];
-        
-        if(info[0][1] < m)
+        dp[0][0] = info[0][0];
+        if(info[0][1] < m) {
             dp[0][info[0][1]] = 0;
+        }
         
-        for(int row = 1; row < size; row++) {
-            int printA = info[row][0];
-            int printB = info[row][1];
+        for(int idx = 1; idx < size; idx++) {
+            int printA = info[idx][0];
+            int printB = info[idx][1];
             
-            for(int col = 0; col < m; col++) {
-                if(dp[row - 1][col] == n)
+            for(int prevB = 0; prevB < m; prevB++) {
+                if(dp[idx - 1][prevB] == Integer.MAX_VALUE) {
                     continue;
+                }
                 
-                int nextA = dp[row - 1][col] + printA;
-                if(nextA < n)
-                    dp[row][col] = Math.min(dp[row][col], nextA);
-                
-                int nextB = col + printB;
-                if(nextB < m)
-                    dp[row][nextB] = Math.min(dp[row][nextB], dp[row - 1][col]); 
+                dp[idx][prevB] = Math.min(dp[idx][prevB], dp[idx - 1][prevB] + printA);
+                int nextB = prevB + printB;
+                if(nextB < m) {
+                    dp[idx][nextB] = Math.min(dp[idx][nextB], dp[idx - 1][prevB]);
+                }
             }
         }
         
-        for(int col = 0; col < m; col++) {
-            answer = Math.min(dp[size - 1][col], answer);
+        for(int printB = 0; printB < m; printB++) {
+            answer = Math.min(answer, dp[size - 1][printB]);
         }
         
-        return answer == n ? -1 : answer;
+        return answer < n ? answer : -1;
     }
 }
