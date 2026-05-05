@@ -1,68 +1,89 @@
+import java.util.*;
+
 class Solution {
-    int m, n, h, w;
-    int[][] drops;
-
     public int[] solution(int m, int n, int h, int w, int[][] drops) {
-        this.m = m;
-        this.n = n;
-        this.h = h;
-        this.w = w;
-        this.drops = drops;
+        int INF = drops.length + 1;
 
-        int left = 0;
-        int right = drops.length;
-        int bestTime = 0;
+        int[][] time = new int[m][n];
 
-        while (left <= right) {
-            int mid = (left + right) / 2;
+        for (int row = 0; row < m; row++) {
+            Arrays.fill(time[row], INF);
+        }
 
-            if (canHide(mid) != null) {
-                bestTime = mid;
-                left = mid + 1;
-            } else {
-                right = mid - 1;
+        for (int idx = 0; idx < drops.length; idx++) {
+            int row = drops[idx][0];
+            int col = drops[idx][1];
+
+            if (time[row][col] == INF) {
+                time[row][col] = idx + 1;
             }
         }
 
-        return canHide(bestTime);
-    }
-
-    int[] canHide(int time) {
-        int rowSize = m - h + 1;
+        int rowSize = m;
         int colSize = n - w + 1;
 
-        int[][] dropCount = new int[rowSize + 1][colSize + 1];
+        int[][] rowMin = new int[rowSize][colSize];
 
-        for (int idx = 0; idx < time; idx++) {
-            int dropRow = drops[idx][0];
-            int dropCol = drops[idx][1];
+        for (int row = 0; row < m; row++) {
+            Deque<Integer> deque = new ArrayDeque<>();
 
-            int startRow = Math.max(0, dropRow - h + 1);
-            int endRow = Math.min(dropRow, rowSize - 1);
+            for (int col = 0; col < n; col++) {
+                while (!deque.isEmpty() && time[row][deque.peekLast()] >= time[row][col]) {
+                    deque.pollLast();
+                }
 
-            int startCol = Math.max(0, dropCol - w + 1);
-            int endCol = Math.min(dropCol, colSize - 1);
+                deque.offerLast(col);
 
-            if (startRow > endRow || startCol > endCol) continue;
+                if (deque.peekFirst() <= col - w) {
+                    deque.pollFirst();
+                }
 
-            dropCount[startRow][startCol]++;
-            dropCount[endRow + 1][startCol]--;
-            dropCount[startRow][endCol + 1]--;
-            dropCount[endRow + 1][endCol + 1]++;
-        }
-
-        for (int row = 0; row < rowSize; row++) {
-            for (int col = 0; col < colSize; col++) {
-                if (row > 0) dropCount[row][col] += dropCount[row - 1][col];
-                if (col > 0) dropCount[row][col] += dropCount[row][col - 1];
-                if (row > 0 && col > 0) dropCount[row][col] -= dropCount[row - 1][col - 1];
-
-                if (dropCount[row][col] == 0) {
-                    return new int[]{row, col};
+                if (col >= w - 1) {
+                    rowMin[row][col - w + 1] = time[row][deque.peekFirst()];
                 }
             }
         }
 
-        return null;
+        int answerRowSize = m - h + 1;
+        int answerColSize = n - w + 1;
+
+        int[][] areaMin = new int[answerRowSize][answerColSize];
+
+        for (int col = 0; col < colSize; col++) {
+            Deque<Integer> deque = new ArrayDeque<>();
+
+            for (int row = 0; row < m; row++) {
+                while (!deque.isEmpty() && rowMin[deque.peekLast()][col] >= rowMin[row][col]) {
+                    deque.pollLast();
+                }
+
+                deque.offerLast(row);
+
+                if (deque.peekFirst() <= row - h) {
+                    deque.pollFirst();
+                }
+
+                if (row >= h - 1) {
+                    int startRow = row - h + 1;
+                    areaMin[startRow][col] = rowMin[deque.peekFirst()][col];
+                }
+            }
+        }
+
+        int bestTime = -1;
+        int bestRow = 0;
+        int bestCol = 0;
+
+        for (int row = 0; row < answerRowSize; row++) {
+            for (int col = 0; col < answerColSize; col++) {
+                if (areaMin[row][col] > bestTime) {
+                    bestTime = areaMin[row][col];
+                    bestRow = row;
+                    bestCol = col;
+                }
+            }
+        }
+
+        return new int[]{bestRow, bestCol};
     }
 }
