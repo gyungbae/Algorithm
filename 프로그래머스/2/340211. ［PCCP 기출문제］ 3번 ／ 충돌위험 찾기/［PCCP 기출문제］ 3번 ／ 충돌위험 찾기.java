@@ -98,7 +98,9 @@ class Robot {
                 row--;
                 rowDiff++;
             }
-        } else if (colDiff != 0) {
+        } 
+        
+        else if (colDiff != 0) {
             if (colDiff > 0) {
                 col++;
                 colDiff--;
