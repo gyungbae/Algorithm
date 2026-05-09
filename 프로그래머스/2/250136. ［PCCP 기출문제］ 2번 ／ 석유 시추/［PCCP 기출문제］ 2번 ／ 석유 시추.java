@@ -70,7 +70,7 @@ class Solution {
         }
         
         int currentSum = 0;
-        for(int idx = 0; idx < sum.length; idx++) {
+        for(int idx = 0; idx < colSize; idx++) {
             currentSum += sum[idx];
             answer = Math.max(answer, currentSum);
         }
