@@ -17,7 +17,7 @@ class Solution {
             long sum = times[0];
             for(int idx = 1; idx < size; idx++) {
                 if(mid < diffs[idx]) {
-                    sum += (times[idx] + times[idx - 1]) * (diffs[idx] - mid);
+                    sum += (long) (times[idx] + times[idx - 1]) * (diffs[idx] - mid);
                 }
                 
                 sum += times[idx];
