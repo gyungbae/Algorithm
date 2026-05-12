@@ -2,20 +2,18 @@ class Solution {
     public int[] solution(int[] sequence, int k) {
         int size = sequence.length;
         
-        int left = 0;
-        int right = 0;
-        int sum = sequence[0];
+        int left = 0; 
+        int right = -1;
+        int sum = 0;
         
         int answerLeft = 0;
         int answerRight = size - 1;
         
         while(true) {
             if(sum >= k) {
-                if(sum == k) {
-                    if(right - left < answerRight - answerLeft) {
-                        answerLeft = left;
-                        answerRight = right;
-                    }
+                if(sum == k && right - left < answerRight - answerLeft) {
+                    answerLeft = left;
+                    answerRight = right;
                 }
                 
                 sum -= sequence[left];
