@@ -23,29 +23,36 @@ class Solution {
         Stack<Task> stack = new Stack<>();
         List<Task> finishList = new ArrayList<>();
         
-        for(int idx = 0; idx < size - 1; idx++) {
-            Task current = tasks[idx];
-            Task next = tasks[idx + 1];
+        int nextIdx = 0;
+        int currentTime = 0;
+        
+        while(nextIdx < size) {
+            if(stack.isEmpty()) {
+                stack.push(tasks[nextIdx++]);
+                currentTime = stack.peek().start;
+                continue;
+            }
             
-            stack.push(current);
-            
-            int remainTime = next.start - current.start;
+            Task next = tasks[nextIdx];
+            int remainTime = next.start - currentTime;
             
             while(!stack.isEmpty() && remainTime > 0) {
-                Task task = stack.peek();
+                Task current = stack.peek();
                 
-                if(task.playtime <= remainTime) {
-                    remainTime -= task.playtime;
+                if(current.playtime <= remainTime) {
+                    remainTime -= current.playtime;
                     finishList.add(stack.pop());
                 } else {
-                    task.playtime -= remainTime;
+                    current.playtime -= remainTime;
                     remainTime = 0;
                 }
             }
+            
+            currentTime = next.start;
+            stack.push(next);
+            nextIdx++;
         }
         
-        stack.push(tasks[size - 1]);
-
         while (!stack.isEmpty()) {
             finishList.add(stack.pop());
         }
