@@ -2,8 +2,8 @@ class Solution {
     int distLimit, splitLimit;
     int answer;
 
-    void search(long currentDist, long leaf, long split, long used) {
-        if (used > distLimit) return;
+    void search(long currentDist, long leaf, long split, long dist) {
+        if (dist > distLimit) return;
 
         answer = (int) Math.max(answer, currentDist + leaf);
 
@@ -12,12 +12,12 @@ class Solution {
             if (nextSplit > splitLimit) continue;
 
             long nextNodes = currentDist * child;
-            long remain = distLimit - used;
+            long remain = distLimit - dist;
 
             long nextDist = Math.min(remain, nextNodes);
             long nextLeaf = nextNodes - nextDist;
 
-            search(nextDist, leaf + nextLeaf, nextSplit, used + nextDist);
+            search(nextDist, leaf + nextLeaf, nextSplit, dist + nextDist);
         }
     }
 
