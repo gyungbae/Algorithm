@@ -22,7 +22,7 @@ class Solution {
             int farPickup = pickupStack.isEmpty() ? -1 : pickupStack.peek();
 
             int farHouse = Math.max(farDelivery, farPickup);
-            answer += (long) (farHouse + 1) * 2;
+            answer += (farHouse + 1) * 2;
 
             int deliveryBox = 0;
             while (!deliveryStack.isEmpty() && deliveryBox < cap) {
