@@ -14,22 +14,18 @@ class Solution {
 
             int min = Integer.MAX_VALUE;
 
-            // 위쪽 벽 반사
             if (!(startX == ballX && startY < ballY)) {
                 min = Math.min(min, getSquareDist(startX, startY, ballX, 2 * n - ballY));
             }
 
-            // 아래쪽 벽 반사
             if (!(startX == ballX && startY > ballY)) {
                 min = Math.min(min, getSquareDist(startX, startY, ballX, -ballY));
             }
 
-            // 왼쪽 벽 반사
             if (!(startY == ballY && startX > ballX)) {
                 min = Math.min(min, getSquareDist(startX, startY, -ballX, ballY));
             }
 
-            // 오른쪽 벽 반사
             if (!(startY == ballY && startX < ballX)) {
                 min = Math.min(min, getSquareDist(startX, startY, 2 * m - ballX, ballY));
             }
