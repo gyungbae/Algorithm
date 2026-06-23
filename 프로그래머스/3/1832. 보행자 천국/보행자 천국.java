@@ -5,7 +5,6 @@ class Solution {
         int[][][] dp = new int[m][n][2];
 
         dp[0][0][0] = 1;
-        dp[0][0][1] = 0; // 수정됨
 
         for(int row = 0; row < m; row++) {
             for(int col = 0; col < n; col++) {
@@ -16,14 +15,14 @@ class Solution {
                     continue;
 
                 if(col > 0) {
-                    if(cityMap[row][col - 1] == 2) // 수정됨
+                    if(cityMap[row][col - 1] == 2) 
                         dp[row][col][0] = dp[row][col - 1][0] % MOD;
                     else
                         dp[row][col][0] = (dp[row][col - 1][0] + dp[row][col - 1][1]) % MOD;
                 }
 
                 if(row > 0) {
-                    if(cityMap[row - 1][col] == 2) // 수정됨
+                    if(cityMap[row - 1][col] == 2) 
                         dp[row][col][1] = dp[row - 1][col][1] % MOD;
                     else
                         dp[row][col][1] = (dp[row - 1][col][0] + dp[row - 1][col][1]) % MOD;
