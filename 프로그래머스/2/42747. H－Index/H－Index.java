@@ -2,18 +2,28 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] citations) {
-        Arrays.sort(citations);
+        int left = 0;
+        int right = citations.length;
+        int answer = 0;
 
-        int size = citations.length;
+        while (left <= right) {
+            int mid = (left + right) / 2;
 
-        for(int idx = 0; idx < size; idx++) {
-            int h = size - idx;
+            int count = 0;
+            for (int citation : citations) {
+                if (citation >= mid) {
+                    count++;
+                }
+            }
 
-            if(citations[idx] >= h) {
-                return h;
+            if (count >= mid) {
+                answer = mid;
+                left = mid + 1; 
+            } else {
+                right = mid - 1;
             }
         }
 
-        return 0;
+        return answer;
     }
 }
