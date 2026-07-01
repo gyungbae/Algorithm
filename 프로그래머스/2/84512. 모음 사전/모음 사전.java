@@ -1,25 +1,29 @@
-import java.util.*;
-
 class Solution {
-    char[] arr = {'A', 'E', 'I', 'O', 'U'};
-    List<String> dictionary = new ArrayList<>();
+    int answer;
+    int count;
     
-    void makeWord(String current) {
-        dictionary.add(current);
-        
-        if(current.length() == 5) {
+    char[] words = {'A', 'E', 'I', 'O', 'U'};
+    
+    void search(String word, String target) {
+        if(word.equals(target)) {
+            answer = count;
             return;
         }
         
+        if(word.length() == 5)
+            return;
+        
         for(int idx = 0; idx < 5; idx++) {
-            makeWord(current + arr[idx]);
+            count++;
+            search(word + words[idx], target);
         }
     }
     
     
     public int solution(String word) {
-        makeWord("");
+        answer = 0;
         
-        return dictionary.indexOf(word);
+        search("", word);
+        return answer;
     }
 }
