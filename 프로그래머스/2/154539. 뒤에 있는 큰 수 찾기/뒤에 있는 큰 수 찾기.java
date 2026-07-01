@@ -2,23 +2,25 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] numbers) {
-        int size = numbers.length;
+        Stack<int[]> stack = new Stack<>();
         
-        int[] answer = new int[size];
-        Arrays.fill(answer, -1);
+        int[] answer = new int[numbers.length];
         
-        Stack<Integer> stack = new Stack<>();
-        
-        for(int idx = 0; idx < size; idx++) {
-            while(!stack.isEmpty() && numbers[stack.peek()] < numbers[idx]) {
-                int prevIdx = stack.pop();
-                answer[prevIdx] = numbers[idx];
+        for(int idx = 0; idx < numbers.length; idx++) {
+            int num = numbers[idx];
+            
+            while(!stack.isEmpty() && stack.peek()[1] < num) {
+                int[] info = stack.pop();
+                answer[info[0]] = num;
             }
             
-            stack.push(idx);
+            stack.push(new int[]{idx, num});
         }
         
-        answer[size - 1] = -1;
+        while(!stack.isEmpty()) {
+            int[] info = stack.pop();
+            answer[info[0]] = -1;
+        }
         
         return answer;
     }
