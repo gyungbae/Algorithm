@@ -4,41 +4,34 @@ class Solution {
     public int solution(String dirs) {
         int row = 0;
         int col = 0;
-
+        
         Set<String> set = new HashSet<>();
-
-        for (int idx = 0; idx < dirs.length(); idx++) {
-
-            int prevRow = row;
-            int prevCol = col;
-
-            char move = dirs.charAt(idx);
-
-            if (move == 'U')
-                row++;
-            else if (move == 'D')
-                row--;
-            else if (move == 'L')
-                col--;
-            else
-                col++;
-
-            if (row < -5 || row > 5 || col < -5 || col > 5) {
-                row = prevRow;
-                col = prevCol;
-                continue;
+        
+        for(int idx = 0; idx < dirs.length(); idx++) {
+            char command = dirs.charAt(idx);
+            
+            int nextRow = row;
+            int nextCol = col;
+            if(command == 'U') {
+                nextRow++;
+            } else if(command == 'D') {
+                nextRow--;
+            } else if(command == 'R') {
+                nextCol++;
+            } else {
+                nextCol--;
             }
-
-            String road =
-                    prevRow + "," + prevCol + "," + row + "," + col;
-
-            String reverseRoad =
-                    row + "," + col + "," + prevRow + "," + prevCol;
-
-            set.add(road);
-            set.add(reverseRoad);
+            
+            if(nextRow < -5 || nextRow > 5 || nextCol < -5 || nextCol > 5)
+                continue;
+            
+            set.add(row + "," + col + "," + nextRow + "," + nextCol);
+            set.add(nextRow + "," + nextCol + "," + row + "," + col);
+            
+            row = nextRow;
+            col = nextCol;
         }
-
+        
         return set.size() / 2;
     }
 }
