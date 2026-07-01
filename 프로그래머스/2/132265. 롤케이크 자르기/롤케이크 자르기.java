@@ -2,24 +2,34 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] topping) {
-        int answer = 0;
+        if(topping.length == 1)
+            return 0;
         
-        Set<Integer> set = new HashSet<>();
-        Map<Integer, Integer> map = new HashMap<>();
+        int[] count = new int[10001];
+        int totalTopping = 0;
         
         for(int num : topping) {
-            map.put(num, map.getOrDefault(num, 0) + 1);
+            if(count[num] == 0)
+                totalTopping++;
+            
+            count[num]++;
         }
         
-        for(int num : topping) {
-            set.add(num);
+        int answer = 0;
+        Set<Integer> leftSet = new HashSet<>();
+        int rightTopping = totalTopping;
+        
+        for(int cutIdx = 0; cutIdx < topping.length - 1; cutIdx++) {
+            int num = topping[cutIdx];
             
-            map.put(num, map.get(num) - 1);
+            leftSet.add(num);
             
-            if(map.get(num) == 0)
-                map.remove(num);
+            if(count[num] == 1) 
+                rightTopping--;
             
-            if(set.size() == map.size())
+            count[num]--;
+            
+            if(leftSet.size() == rightTopping)
                 answer++;
         }
         
