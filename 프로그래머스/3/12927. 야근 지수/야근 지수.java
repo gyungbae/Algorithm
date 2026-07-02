@@ -1,58 +1,27 @@
+import java.util.*;
+
 class Solution {
     public long solution(int n, int[] works) {
-        int left = 0;
-        int right = 0;
+        PriorityQueue<Integer> queue = new PriorityQueue<>(Collections.reverseOrder());
         
         long total = 0;
-        for(int value : works) {
-            total += value;
-            right = Math.max(right, value);
+        for(int work : works) {
+            total += work;
+            queue.offer(work);
         }
         
         if(total <= n)
             return 0;
         
-        int target = 0;
-        while(left <= right) {
-            int mid = left + (right - left) / 2;
-            
-            long sum = 0;
-            for(int value : works) {
-                if(value > mid)
-                    sum += value - mid;
-            }
-            
-            if(sum <= n) {
-                target = mid;
-                right = mid - 1;
-            } else {
-                left = mid + 1;
-            }
-        }
-        
-        int[] result = new int[works.length];
-        for(int idx = 0; idx < works.length; idx++) {
-            if(works[idx] > target) {
-                result[idx] = target;
-                n -= works[idx] - target;
-            } else {
-                result[idx] = works[idx];
-            }
-        }
-            
-        for(int idx = 0; idx < works.length; idx++) {
-            if(n <= 0)
-                break;
-            
-            if(result[idx] == target) {
-                result[idx]--;
-                n--;
-            }
+        while(n > 0) {
+            queue.offer(queue.poll() - 1);
+            n--;
         }
         
         long answer = 0;
-        for(int idx = 0; idx < works.length; idx++) {
-            answer += (long) result[idx] * result[idx];
+        while(!queue.isEmpty()) {
+            int num = queue.poll();
+            answer += (long) num * num;
         }
         
         return answer;
