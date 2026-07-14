@@ -3,34 +3,33 @@ import java.util.*;
 class Solution {
     public int solution(int[] order) {
         int answer = 0;
-
-        Queue<Integer> queue = new ArrayDeque<>();
-        for (int num = 1; num <= order.length; num++) {
-            queue.offer(num);
-        }
-
+        int boxNum = 1;
         Stack<Integer> stack = new Stack<>();
-
-        for (int num : order) {
-            while (!queue.isEmpty() && queue.peek() < num) {
-                stack.push(queue.poll());
-            }
-
-            if (!queue.isEmpty() && queue.peek() == num) {
-                queue.poll();
+        
+        for(int num : order) {
+            if(boxNum == num) {
                 answer++;
+                boxNum++;
                 continue;
             }
-
-            if (!stack.isEmpty() && stack.peek() == num) {
+            
+            if(!stack.isEmpty() && stack.peek() == num) {
+                answer++;
                 stack.pop();
-                answer++;
                 continue;
             }
-
-            break;
+            
+            if(boxNum > num)
+                break;
+            
+            while(boxNum < num) {
+                stack.push(boxNum++);
+            }
+            
+            answer++;
+            boxNum++;
         }
-
+        
         return answer;
     }
 }
