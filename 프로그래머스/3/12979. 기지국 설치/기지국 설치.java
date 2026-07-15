@@ -1,38 +1,39 @@
 class Solution {
     public int solution(int n, int[] stations, int w) {
         int answer = 0;
+        int current = 1;
+        int coverage = 2 * w + 1;
         
-        int currentIdx = 1;
-        int range = w * 2 + 1;
         for(int station : stations) {
+            if(current > n)
+                break;
+            
             int left = station - w;
             int right = station + w;
             
-            if(currentIdx < left) {
-                int gap = left - currentIdx;
-                
-                int build = gap / range;
-                
-                if(gap % range != 0)
-                    build++;
-                
-                answer += build;
+            if(left <= current) {
+                current = right + 1; 
+                continue;
             }
             
-            currentIdx = right + 1;
+            int gap = left - current;
+            answer += gap / coverage;
+            
+            if(gap % coverage != 0)
+                answer++;
+            
+            current = right + 1;
         }
         
-        if(currentIdx <= n) {
-            int gap = n - currentIdx + 1;
+        int gap = n - current + 1;
+        
+        if(gap > 0) {
+            answer += gap / coverage;
             
-            int build = gap / range;
-            
-            if(gap % range != 0)
-                build++;
-            
-            answer += build;
+            if(gap % coverage != 0)
+                answer++;
         }
-
+        
         return answer;
     }
 }
