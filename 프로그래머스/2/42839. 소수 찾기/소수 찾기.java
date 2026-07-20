@@ -1,12 +1,37 @@
 import java.util.*;
 
 class Solution {
-    char[] numArr;
-    boolean[] selected;
-    Set<Integer> set = new HashSet<>();
+    String numbers;
+    int length;
     
-    boolean isPrime(int num) {
-        if(num < 2)
+    Set<Integer> set = new HashSet<>();
+    boolean[] selected;
+    
+    void search(int depth, String word) {
+        
+        if(!word.equals("") && isPrime(word)) {
+            int num = Integer.parseInt(word);
+            set.add(num);
+        }
+        
+        if(depth == length) {
+            return;
+        }
+        
+        for(int idx = 0; idx < length; idx++) {
+            if(selected[idx])
+                continue;
+            
+            selected[idx] = true;
+            search(depth + 1, word + numbers.charAt(idx));
+            selected[idx] = false;
+        }
+    }
+    
+    boolean isPrime(String word) {
+        int num = Integer.parseInt(word);
+        
+        if(num <= 1)
             return false;
         
         for(int divisor = 2; divisor <= Math.sqrt(num); divisor++) {
@@ -17,29 +42,12 @@ class Solution {
         return true;
     }
     
-    void search(String current) {
-        if(!current.equals("")) {
-            int num = Integer.parseInt(current);
-            
-            if(isPrime(num))
-                set.add(num);
-        }
-        
-        for(int idx = 0; idx < numArr.length; idx++) {
-            if(selected[idx])
-                continue;
-            
-            selected[idx] = true;
-            search(current + numArr[idx]);
-            selected[idx] = false;
-        }
-    }
-    
     public int solution(String numbers) {
-        numArr = numbers.toCharArray();
-        selected = new boolean[numArr.length];
+        this.numbers = numbers;
+        length = numbers.length();
         
-        search("");
+        selected = new boolean[length];
+        search(0, "");
         
         return set.size();
     }
