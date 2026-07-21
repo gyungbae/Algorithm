@@ -1,50 +1,51 @@
-import java.util.*;
+import java.util.*; 
 
 class Solution {
     public int solution(int[] queue1, int[] queue2) {
-        Queue<Integer> firstQueue = new ArrayDeque<>();
-        Queue<Integer> secondQueue = new ArrayDeque<>();
-        
+        Queue<Integer> q1 = new ArrayDeque<>();
+        Queue<Integer> q2 = new ArrayDeque<>();
+
+        int max = queue1.length * 4;
+
         long sum1 = 0;
-        long sum2 = 0;
-        
         for (int num : queue1) {
-            firstQueue.offer(num);
             sum1 += num;
+            q1.offer(num);
         }
-        
+
+        long sum2 = 0;
         for (int num : queue2) {
-            secondQueue.offer(num);
             sum2 += num;
+            q2.offer(num);
         }
-        
-        long total = sum1 + sum2;
-        if (total % 2 != 0) {
+
+        if ((sum1 + sum2) % 2 != 0)
             return -1;
-        }
-        
-        long target = total / 2;
-        int moveCount = 0;
-        int limit = queue1.length * 4;
-        
-        while (moveCount <= limit) {
-            if (sum1 == target) {
-                return moveCount;
-            }
-            
-            if (sum1 > target) {
-                int movedNum = firstQueue.poll();
-                secondQueue.offer(movedNum);
-                sum1 -= movedNum;
+
+        int count = 0;
+
+        while (count < max) { 
+            if (sum1 > sum2) {
+                int num = q1.poll();
+
+                sum1 -= num; 
+                sum2 += num;
+
+                q2.offer(num);
+                count++;
+            } else if (sum2 > sum1) { 
+                int num = q2.poll();
+
+                sum2 -= num; 
+                sum1 += num;
+
+                q1.offer(num);
+                count++;
             } else {
-                int movedNum = secondQueue.poll();
-                firstQueue.offer(movedNum);
-                sum1 += movedNum;
+                return count; 
             }
-            
-            moveCount++;
         }
-        
-        return -1;
+
+        return -1; 
     }
 }
